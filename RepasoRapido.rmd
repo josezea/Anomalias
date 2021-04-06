@@ -1,0 +1,397 @@
+---
+title: "Untitled"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Repaso
+
+```{python, echo = TRUE}
+import numpy as np 
+import scipy.stats as st
+import matplotlib.pyplot as plt
+import pandas as pd
+import re
+import os
+```
+
+Entre las estructuras básicas de python están los números, las cadenas de texto, las listas, los conjuntos (sets),las tuplas, los diccionarios, estas estructuras tiene múltiples propositos en diferentes ámbitos de la programación, para el análisis de datos serán más adecuadas otras estructuras como por ejemplo los arreglos de la biblioteca numpy y los dataframes de la biblioteca pandas.
+Las estructuras más básicas se presentan a continuación:
+
+```{python, echo = TRUE}
+num = 5
+num
+type(num)
+num2 = 4.56789
+num2
+type(num2)
+cadena = 'Juan'
+cadena
+type(cadena)
+logico = True
+logico
+type(logico)
+```
+
+Otra estructura básica que aparece bastante frecuente son las fechas, que se abordarán con la biblioteca numpy:
+
+Dentro de las estructuras más complejos se encuentran las listas, estas admiten diferentes tipos básicos de objetos y son mutables, es decir una vez creadas se pueden modificar:
+
+
+```{python, echo = TRUE}
+lista = [2, 7, 8]
+lista2 = [2, 'Isabela', True, [1, 2, 3]]
+lista
+lista2
+```
+
+
+Existe una forma muy ingeniosa de crear secuencias de números en las listas conocida como list comprenhension (muy similar a la notación por comprensión de la teoría de conjuntos que se abordaba en primaria:
+
+```{python, echo = TRUE}
+[x**2 for x in lista]
+```
+
+Para seleccionar elementos basta con indicar las posiciones, en python a diferencia de R y Matlab los subíndices arrancan desde el 0
+
+```{python, echo=TRUE}
+lista[0:2]
+```
+Como se mencionó anteriormente las listas son modificables:
+
+```{python, echo = TRUE}
+lista = [2, 7, 8]
+lista
+lista[2] = 80
+lista
+lista.append(10)
+lista
+```
+
+Las tuplas tienen funcionalidad muy similar a las listas y se pueden crear con paréntesis o sin parentesis:
+
+```{python, echo = TRUE}
+# Tuplas
+tupla = (2, 7, 8, 8)
+tupla2 = 2, 7, 8, 8, 90
+tupla
+tupla2
+```
+
+Estos objetos no nos mutables a diferencia de las listas:
+
+```{python, echo = TRUE}
+# tupla
+# tupla[2] = 80 # no permite
+# tupla.count(8)
+```
+Otra estructura muy útil en combinación con la biblioteca pandas (especializada en análisis de datos) es el diccionario, el cual tendrá un rol determinante en hacer operaciones de busqueda muy rápidas y además permitirá crear dataframes de la biblioteca pandas muy rapidamente:
+
+```{python, echo = TRUE}
+dic = {
+  "marca": ['Renault', 'Chevrolet'],
+  "modelo": ['Logan', 'Spark'],
+  "year": [2018, 2017]
+}
+dict
+```
+
+```{python, echo = TRUE}
+dic["modelo"]
+type(dic["modelo"])
+```
+
+
+# Arreglos
+
+Los arreglos son estructuras que interactuan muy bien con pandas y con scipy(útil para hacer cálculos numéricos como por ejemplo las distribuciones de probabilidad y algunas funciones estadísticas)
+
+Un arreglo puede ser unidimensional o bidimensional, observe que los arreglos tienen atributos (por ejemplo itemsize) y métodos (por ejemeplo el método cumsum)
+```{python, echo = TRUE}
+x = np.array([1,2,3, 4, 5])
+x
+type(x)
+x.itemsize
+x.cumsum()
+```
+
+Otro ejemplo de atributo es la dimensión del arreglo:
+
+```{python, echo = TRUE}
+x.shape
+```
+
+Los métodos hacen el uso de paréntesis, a diferencia de los atributos que ya vienen empaquetados dentro del objeto, para calculor el método se requiere el uso de una función. Otras estructuras como los pandas dataframes y en general casi cualquier estructura de datos de python poseen atributos y métodos. Los familiarizados con la progrmación orientada a objetos encontrarán esto muy natural (java, C++)
+
+```{python, echo = TRUE}
+x.mean()
+```
+
+
+Python dispone de funciones estadísticas y matematicas algunas vienen incorporadas en la biblioteca base (también llamada standard library no requiere instalación), la biblioteca base posee algunos módulos como math. numpy posee también una amplia gama de funciones matemáticas y estadísticas.
+
+```{python, echo = TRUE}
+import math
+math.sin(2)
+```
+
+Algunas veces puede ser muy engorros todo el tiempo colocarle el nombre del módulo a las funciones:
+
+```{python, echo = TRUE}
+from math import sin
+sin(2)
+[sin(i) for i in [1,2,3, 4, 5]] 
+```
+
+
+La siguiente sentencia no funcionará, ya que se está aplicando la función seno sobre una lista (no sobre un double). Pueden verificar con help(math.sin) que estructura de datos recibe esta función.
+
+```{python, echo = TRUE}
+#sin([1, 2])
+```
+
+Sin embargo en generar el desempeño de las funciones de
+numpy suele ser mucho mejor, además de que permite realizar las operaciones para varios números dispuestos en un arreglo:
+
+```{python, echo = TRUE}
+np.sin(np.array([1,2,3, 4, 5, math.pi/2]))
+```
+
+Las siguientes son algunas funciones matemáticas y estadísticas que trae numpy:
+
+```{python, echo = TRUE}
+x = np.array([1,2,3, 4, 5])
+np.min(x)
+np.sum(x)
+np.mean(x)
+np.var(x)
+np.std(x)
+np.max(x)
+```
+Las medidas de localización también se pueden calcular con numpy:
+
+```{python, echo = TRUE}
+np.quantile(x, 0.25)
+np.median(x)
+np.quantile(x, 0.75)
+```
+
+Unas medidas muy útiles para conocer la forma de la distribución son la asimetría y la curtosis, estas requeiren el uso de la biblioteca scipy, en particular el módulo stats.
+
+```{python, echo = TRUE}
+import scipy.stats as st
+st.skew([1, 2, 3, 4, 5, 12, 20])
+```
+ La curtosis se calcula de forma similar:
+ 
+ 
+```{python, echo = TRUE}
+import scipy.stats as st
+st.kurtosis([1, 2, 3, 4, 5, 12, 20])
+```
+
+## Creación de secuencias y slicing
+Se pueden seleccionar porciones de datos de los arreglos, primero crearemos una secuencia del 1 al 10:
+
+```{python, echo = TRUE}
+a = np.arange(1,10)
+a
+```
+
+Posteriormente creamos una secuencia del 1 al 31 (sin incluirlo) saltanto de tres en tres:
+
+```{python, echo = TRUE}
+a = np.arange(1,31, 3, dtype=int)
+a
+```
+ Modificamos el objeto anterior:
+
+```{python, echo = TRUE}
+b = 10 * np.arange(1,31, 3, dtype=int)
+b
+len(b)
+```
+
+Algunas reglas para realizar slicing (selección de ítems)
+* a[inicio:fin]: inicio del ítem hasta el paso fin-1
+* a[inicio:]: ítems desde el inicio hasta el fin del arreglo
+* a[:fin]: ítems desde al inicio al paso stop-1
+* a[:]: copiar el arreglo completo    
+* a[inicio:fin:paso] # desde el inicio a fin-1 saltando el número de pasos especificado.
+Se puede seleccionar mediante subíndices, para seleccionar posiciones específicas:
+
+```{python, echo = TRUE}
+b
+b[[0, 5, 2]]
+```
+
+Para seleccionar desde una posición específica de ahí en adelante:
+
+```{python, echo = TRUE}
+b
+b[2:]
+```
+
+Para seleccionar hasta una posición espécifica (por ejemplo hsta llegar a la posición 3):
+
+```{python, echo = TRUE}
+b
+b[:4]
+```
+
+Se puede seleccionar entre la posición 3 y la 7
+
+```{python, echo = TRUE}
+b
+b[3:8]
+```
+
+Finalmente se puede seleccionar de forma inversa
+```{python, echo = TRUE}
+b
+b[-2:]
+```
+
+Se puede seleccionar los objetos de manera secuencial, en este caso saltando de tres en tres:
+
+```{python, echo = TRUE}
+b
+b[1:11:3]
+```
+
+
+Pueden ocurrir situaciones en donde se quiera eliminar algunos elementos (por ejemplo la posición 3, 5 y 6). Para los conocedores en R esto se realiza colocando un signo menos a las posiciones, en python hay muchas formas de hacerlo pero una sencilla es la siguiente:
+
+```{python, echo = TRUE}
+b
+np.delete(b, [3,5,6])
+```
+
+Se quiere de eliminar la secuencia del 2 al 8 saltanto de dos en dos:
+
+```{python, echo = TRUE}
+eliminar = np.arange(2,9, 2, dtype=int)
+eliminar
+b
+np.delete(b, eliminar)
+```
+
+
+```{python, echo=TRUE}
+import pandas
+forbes = pandas.read_csv('forbes2000.csv')
+```
+
+```{python, echo=TRUE}
+forbes.head()
+```
+
+```{python, echo=TRUE}
+forbes.info()
+```
+
+
+```{python, echo=TRUE}
+ Identificar los duplicados 
+bool_series = forbes["Company Name"].duplicated()
+bool_series.value_counts()
+```
+
+```{python, echo=TRUE}
+forbes.shape
+```
+
+
+```{python, echo=TRUE}
+tablaFrec = pd.DataFrame(forbes['Country'].value_counts())
+```
+
+```{python, echo=TRUE}
+tablaFrec['FrecRelativa'] = round(100 * tablaFrec['Country'] / sum(tablaFrec['Country']),1)
+```
+
+```{python, echo=TRUE}
+tablaFrec['FrecRelativaAcum'] = tablaFrec['FrecRelativa'].cumsum()
+tablaFrec
+```
+
+¿Cuáles son las empresas colombianas en el listado Forbes 2000?
+
+Se usará el método query para hacer filtros de una variables en este caso, se selecciona el país Colombia
+
+```{python, echo=TRUE}
+forbes.query("Country == 'Colombia'")
+```
+
+Empresas en EE.UU o China:
+
+```{python, echo=TRUE}
+forbes.query("Country == 'China' | Country == 'United States'")
+```
+
+```{python, echo=TRUE}
+#forbes.loc[forbes['Country'] == 'China' | forbes['Country'] == 'United States' , ] # No funciona sin paréntesis
+forbes.loc[(forbes['Country'] == 'China') | (forbes['Country'] == 'United States') , ]
+```
+
+Otra función relevante para llevar a cabo procesamiento de datos, es la función assign, esta función permite crear nuevas variables (features) a partir de variables existentes en la base de datos. Calculemos el cociente entre los activos y la valoración de marca:
+
+```{python, echo=TRUE}
+#forbes['Activos_ValorMarca'] = forbes['activos'] / forbes['valor_mercado']
+# Antes debemos volver las variables numéricas
+forbes['activos'] = pd.to_numeric(forbes['activos'])
+forbes['Activos_ValorMarca'] = forbes['activos'] / forbes['valor_mercado']
+```
+
+
+```{python, echo=TRUE}
+forbes.describe()
+```
+
+Otra forma de crar nuevas variables es con la función assign
+
+```{python, echo=TRUE}
+del(forbes['Activos_ValorMarca'])
+```
+
+```{python, echo=TRUE}
+forbes.head()
+```
+
+```{python, echo=TRUE}
+forbes = forbes.assign(Activos_ValorMarca = forbes['activos'] / forbes['valor_mercado'], lista = 'forbes2000')
+```
+
+
+```{python, echo=TRUE}
+forbes.head()
+```
+
+
+```{python, echo=TRUE}
+forbes.agg({'valor_mercado': 'mean'})
+```
+
+
+```{python, echo=TRUE}
+forbes.agg(
+    {
+         'activos':'mean',   
+         'valor_mercado': 'median'}
+)
+```
+
+
+```{python, echo=TRUE}
+forbes.groupby('Country').agg({'activos': ['mean', 'min', 'max'], 'valor_mercado': ['mean', 'min', 'max']})
+
+```
+
+```{python, echo=TRUE}
+forbes.groupby('Country', as_index = True).agg({'activos': ['mean', 'min', 'max'], 'valor_mercado': ['mean', 'min', 'max']})
+```
+
+
