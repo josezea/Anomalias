@@ -1,0 +1,11 @@
+# Esta es una base de datos con la informacion corporal de un
+# grupo de estudiantes de pregrado de la universidad.
+# -----------------------------------------------------------
+# Las variables son:
+# Peso: peso corporal en kg
+# Sexo: género, F para mujeres y M para hombres
+# Estatura: estatura en metros
+# circun_cuello: circunferencia del cuello en centimetros
+# circun_muneca: circunferencia de la muneca en centimetros
+# -----------------------------------------------------------
+# Fuente: https://fhernanb.github.io/libro_regresion/diag2.html#distancia-de-cook
